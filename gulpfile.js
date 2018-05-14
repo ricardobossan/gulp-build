@@ -43,6 +43,6 @@ gulp.task('sass', function() {
 gulp.task('default', ['serve', 'sass', 'lint'], function () {
 	gulp.watch("app/sass/*.scss", ['sass']);
 	gulp.watch("app/*.html").on('change', browserSync.reload);
-
+	gulp.watch('app/js/*.js', ['lint']);
 	// This will only run if the lint task is successful...
 });
