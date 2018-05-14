@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
-const autoprefixer = require('gulp-autoprefixer')
+const autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('lint', () => {
 	// ESLint ignores files with "node_modules" paths.
@@ -23,7 +23,9 @@ gulp.task('lint', () => {
 gulp.task('styles', function() {
 	gulp.src('sass/**/*.scss')
 		.pipe(sass().on('error', sass.logError))
-		.pipe(autoprefixer())
+		.pipe(autoprefixer({
+			browsers: ['last 2 versions']
+		}))
 		.pipe(gulp.dest('./css'));
 });
 
