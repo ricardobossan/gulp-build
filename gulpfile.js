@@ -22,14 +22,10 @@ gulp.task('lint', () => {
 });
 
 // Static Server + watching scss/html files
-gulp.task('serve', ['sass'], function() {
-
+gulp.task('serve', function() {
 	browserSync.init({
 		server: "./app"
 	});
-
-	gulp.watch("app/sass/*.scss", ['sass']);
-	gulp.watch("app/*.html").on('change', browserSync.reload);
 });
 
 // Compile sass into CSS & auto-inject into browsers
@@ -44,6 +40,9 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('default', ['lint', 'serve'], function () {
+gulp.task('default', ['serve', 'sass', 'lint'], function () {
+	gulp.watch("app/sass/*.scss", ['sass']);
+	gulp.watch("app/*.html").on('change', browserSync.reload);
+
 	// This will only run if the lint task is successful...
 });
