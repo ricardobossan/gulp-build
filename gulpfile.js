@@ -7,6 +7,7 @@ const browserSync = require('browser-sync').create();
 const jasmine = require('gulp-jasmine-phantom');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
+const babel = require('gulp-babel');
 
 gulp.task('default', ['copy-html', 'copy-images', 'sass', 'lint'], function () {
 	gulp.watch("app/sass/*.scss", ['sass']);
@@ -29,12 +30,18 @@ gulp.task('dist', [
 
 gulp.task('scripts', function() {
 	gulp.src('app/js/**/*.js')
+		.pipe(babel({
+			presets: ['env']
+		}))
 		.pipe(concat('all.js'))
 		.pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('scripts-dist', function() {
 	gulp.src('app/js/**/*.js')
+		.pipe(babel({
+			presets: ['env']
+		}))
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist/js'));
