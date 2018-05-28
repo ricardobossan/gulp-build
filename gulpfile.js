@@ -1,15 +1,18 @@
 /*eslint-env node*/
 const gulp = require('gulp');
+const browserSync = require('browser-sync').create();
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
-const browserSync = require('browser-sync').create();
 const jasmine = require('gulp-jasmine-phantom');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
+const sourcemaps = (require('gulp-sourcemaps'));
+const imagemin = require('gulp-imagemin');
+const pngquant = require('imagemin-pngquant');
 
-gulp.task('default', ['copy-html', 'copy-images', 'sass', 'lint'], function () {
+gulp.task('default', ['copy-html', 'copy-images', 'sass', 'lint'], () =>  {
 	gulp.watch("app/sass/*.scss", ['sass']);
 	gulp.watch("dist/index.html").on('change', browserSync.reload);
 	gulp.watch('app/js/*.js', ['lint']);
@@ -28,16 +31,18 @@ gulp.task('dist', [
 	'scripts-dist'
 ]);
 
-gulp.task('scripts', function() {
+gulp.task('scripts', () => {
 	gulp.src('app/js/**/*.js')
+		.pipe(sourcemaps.init())
 		.pipe(babel({
 			presets: ['env']
 		}))
 		.pipe(concat('all.js'))
+		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('scripts-dist', function() {
+gulp.task('scripts-dist', () => {
 	gulp.src('app/js/**/*.js')
 		.pipe(babel({
 			presets: ['env']
@@ -64,7 +69,7 @@ gulp.task('lint', () => {
 		.pipe(eslint.failAfterError());
 });
 
-gulp.task('tests', function () {
+gulp.task('tests', () =>  {
 	gulp.src('tests/spec/extraSpec.js')
 		.pipe(jasmine({
 			integration: true,
@@ -81,7 +86,7 @@ gulp.task('tests', function () {
 });
 */
 // Compile sass into CSS & auto-inject into browsers
-gulp.task('sass', function() {
+gulp.task('sass', () => {
 	return gulp.src("./app/sass/**/*.scss")
 		.pipe(sass({
 			outputStyle: 'compressed'
@@ -93,12 +98,17 @@ gulp.task('sass', function() {
 		.pipe(browserSync.stream());
 });
 
-gulp.task('copy-html', function() {
+gulp.task('copy-html', () => {
 	gulp.src('app/index.html')
 		.pipe(gulp.dest('./dist'));
 });
 
-gulp.task('copy-images', function() {
+gulp.task('copy-images', () => {
 	gulp.src('app/img/*')
 		.pipe(gulp.dest('dist/img'));
 });
+
+gulp.task('png-optim', () =>
+	gulp.src('app/img/*')
+		.pipe(imagemin([pngquant()]))
+		.pipe(gulp.dest('dist/img')));
