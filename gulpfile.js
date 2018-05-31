@@ -74,7 +74,7 @@ gulp.task('tests', () =>  {
 		.pipe(jasmine({
 			integration: true,
 			vendor: 'app/js/**/*.js',
-			keepRuner: 'tests/SpecRunner.html'
+			keepRunner: './'
 		}));
 });
 
